@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Secure System</title>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: monospace;
+            color: #00ff00;
+            background: black;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border: 1px solid #00ff00;
+            width: 300px;
+            box-shadow: 0 0 20px #00ff00;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: black;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #00ff00;
+            border: none;
+            color: black;
+            cursor: pointer;
+        }
+
+        .terminal {
+            margin-bottom: 15px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="login-box">
+        <div class="terminal" id="typing"></div>
+
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="username" required>
+            <input type="password" name="password" placeholder="password" required>
+            <input type="text" name="hidden_field" style="display:none">
+            <button type="submit">ACCESS</button>
+        </form>
+    </div>
+
+    <script>
+        // 🔥 MATRIX EFFECT
+        const canvas = document.getElementById("matrix");
+        const ctx = canvas.getContext("2d");
+
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#00ff00";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        // 🔥 TERMINAL TYPING EFFECT
+        const text = "Initializing secure system...";
+        let i = 0;
+
+        function typingEffect() {
+            if (i < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typingEffect, 50);
+            }
+        }
+
+        typingEffect();
+    </script>
+
+</body>
+
+</html>
